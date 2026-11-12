@@ -3,7 +3,7 @@ requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "nexus"
+name = "cordix"
 description = "A modular Python-based Discord Bot framework"
 
 dynamic = ["version"]
@@ -50,14 +50,14 @@ dev = ["jupyterlab", "pre-commit"]
 tests = ["pytest", "pytest-cov", { include-group = "dev" }]
 
 [project.urls]
-Repository = "https://github.com/tgross03/nexus"
-Documentation = "https://github.com/tgross03/nexus"
+Repository = "https://github.com/tgross03/cordix"
+Documentation = "https://github.com/tgross03/cordix"
 
 [tool.setuptools_scm]
-write_to = "nexus/_version.py"
+write_to = "cordix/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["."]
 
 [project.scripts]
-nexus = "nexus.cli.cli:entry_point"
+cordix = "cordix.cli.cli:entry_point"

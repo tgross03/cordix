@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from nexus.core.config import MissingKeyPolicy, TOMLConfiguration
-from nexus.core.exceptions.generic import InvalidConfigurationError
+from cordix.core.config import MissingKeyPolicy, TOMLConfiguration
+from cordix.core.exceptions.generic import InvalidConfigurationError
 
 _TRUE_DATA = {
     "int": 1,
