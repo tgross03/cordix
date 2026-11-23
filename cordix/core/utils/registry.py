@@ -66,14 +66,13 @@ class Registry:
         force_key_types: bool = False,
         key_types: list[type] | None = None,
     ):
-        self._registry: dict[Any, Any] = {}
+        self._joined_registry: dict[Any, Any] = {}
+        self._registries: dict[str, dict[Any, Any]] = {attr: {} for attr in index_attributes}
         self._force_key_types: bool = force_key_types
         self._index_attributes: list[str] = index_attributes
 
         if key_types is not None and len(key_types) != len(index_attributes):
-            raise ValueError(
-                "The number of key types must match the number of index attributes"
-            )
+            raise ValueError("The number of key types must match the number of index attributes")
 
         self._key_types: dict[str, type] = {}
         for i, attr in enumerate(self._index_attributes):
@@ -94,26 +93,36 @@ class Registry:
 
         return cls
 
-    def __getitem__(self, key: Any) -> Any:
-        return self._registry[key]
+    def __getitem__(self, key: Any | tuple[str, Any]) -> Any:
+        if isinstance(key, tuple):
+            attr_name = key[0]
+            idx = key[1]
+
+            return self._registries[attr_name][idx]
+
+        else:
+            return self._joined_registry[key]
 
     def __contains__(self, item: Any):
-        return item in self.values() or item in self._registry
+        return item in self.values() or item in self._joined_registry
 
     def __len__(self) -> int:
         return len(self.values())
 
     def is_empty(self) -> bool:
-        return len(self._registry) == 0
+        return len(self._joined_registry) == 0
 
-    def items(self) -> tuple[tuple[Any], Any]:
+    def items(self) -> list[tuple[tuple[Any], Any]]:
         items = []
         for value in self.values():
             items.append((tuple(self.keys_for_value(value=value)), value))
         return items
 
-    def keys(self) -> list[Any]:
-        return list(self._registry.keys())
+    def keys(self, attribute_name: str | None = None) -> list[Any]:
+        if attribute_name is None:
+            return list(self._joined_registry.keys())
+        else:
+            return list(self._registries[attribute_name].keys())
 
     def keys_grouped(self) -> list[tuple[Any]]:
         items = []
@@ -122,10 +131,10 @@ class Registry:
         return items
 
     def keys_for_value(self, value: Any) -> list[Any]:
-        return [key for key in self._registry.keys() if self._registry[key] == value]
+        return [key for key in self._joined_registry.keys() if self._joined_registry[key] == value]
 
     def values(self) -> list[Any]:
-        return list(set(self._registry.values()))
+        return list(set(self._joined_registry.values()))
 
     def register(self, value: Any) -> None:
 
@@ -146,7 +155,7 @@ class Registry:
         for attribute in self._index_attributes:
             index = getattr(value, attribute)
 
-            if index in self._registry:
+            if index in self._joined_registry:
                 raise ValueError(
                     f"There already is a {self.registry_type.__name__} registered with "
                     f"the same {attribute}."
@@ -174,7 +183,7 @@ class Registry:
             self._key_types_registered = True
 
         for idx in idcs:
-            self._registry[idx] = value
+            self._joined_registry[idx] = value
 
     def unregister_value(self, value: Any) -> None:
         if value not in self.values():
@@ -182,18 +191,18 @@ class Registry:
 
         for attribute in self._index_attributes:
             index = getattr(value, attribute)
-            del self._registry[index]
+            del self._joined_registry[index]
 
     def unregister_index(self, index: Any) -> None:
-        if index not in self._registry:
+        if index not in self._joined_registry:
             raise ValueError("The given index is not registered in this Registry.")
 
-        value = self._registry[index]
+        value = self._joined_registry[index]
 
         keys = self.keys_for_value(value=value)
 
         for key in keys:
-            del self._registry[key]
+            del self._joined_registry[key]
 
     def tree_view(self) -> Tree:
         root = Tree(f"{self.registry_type.__name__} Registry")
