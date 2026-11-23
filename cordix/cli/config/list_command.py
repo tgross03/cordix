@@ -8,7 +8,7 @@ from rich.tree import Tree
 
 from cordix.cli.colors import EFFECTS, RESET, get_default_palette
 from cordix.cli.elements import print_error_message
-from cordix.core import VariableLibrary
+from cordix.core import GlobalVariables
 from cordix.core.exceptions.generic import InvalidConfigurationError
 
 palette = get_default_palette()
@@ -30,9 +30,9 @@ palette = get_default_palette()
 def list_variables(key: str | None, debug: bool) -> None:
     try:
         if key is None:
-            value = VariableLibrary.get_config().asdict()
+            value = GlobalVariables.get_config().asdict()
         else:
-            value = VariableLibrary.get_variable(key=key)
+            value = GlobalVariables.get_variable(key=key)
     except InvalidConfigurationError:
         return print_error_message(
             error=InvalidConfigurationError(
@@ -43,7 +43,7 @@ def list_variables(key: str | None, debug: bool) -> None:
         )
     except KeyError:
         matched = list(
-            fuzzyfinder(key, VariableLibrary.get_config().get_keys(), highlight=True)
+            fuzzyfinder(key, GlobalVariables.get_config().keys(), highlight=True)
         )
         return print_error_message(
             error=KeyError(

@@ -6,7 +6,7 @@ from fuzzyfinder import fuzzyfinder
 
 from cordix.cli.colors import EFFECTS, RESET, get_default_palette
 from cordix.cli.elements import ConfirmInput, print_error_message
-from cordix.core import VariableLibrary
+from cordix.core import GlobalVariables
 from cordix.core.exceptions.generic import InvalidConfigurationError
 
 palette = get_default_palette()
@@ -34,7 +34,7 @@ palette = get_default_palette()
 )
 def set_value(key: str, value: str, force: bool, debug: bool) -> None:
     try:
-        prev_value = VariableLibrary.get_variable(key=key)
+        prev_value = GlobalVariables.get_variable(key=key)
 
         if isinstance(prev_value, bool):
             if value.lower() == "true":
@@ -74,12 +74,12 @@ def set_value(key: str, value: str, force: bool, debug: bool) -> None:
             ).prompt()
 
             if confirm:
-                VariableLibrary.set_variable(key=key, value=value)
+                GlobalVariables.set_variable(key=key, value=value)
             else:
                 print(f"{palette.red}Canceled variable change.{RESET}")
                 return None
         else:
-            VariableLibrary.set_variable(key=key, value=value)
+            GlobalVariables.set_variable(key=key, value=value)
 
     except InvalidConfigurationError:
         return print_error_message(
@@ -93,7 +93,7 @@ def set_value(key: str, value: str, force: bool, debug: bool) -> None:
         matched = list(
             fuzzyfinder(
                 key,
-                VariableLibrary.get_config().get_keys(non_dict_only=True),
+                GlobalVariables.get_config().keys(non_dict_only=True),
                 highlight=True,
             )
         )

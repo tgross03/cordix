@@ -9,8 +9,10 @@ from mergedeep import merge
 
 from .toml import TOMLConfiguration
 
+GLOBAL_CONFIG_DIR = Path.home() / ".cordix/config"
 
-class VariableLibrary:
+
+class GlobalVariables:
     _instance = None
 
     def __new__(cls):
@@ -23,7 +25,7 @@ class VariableLibrary:
             return
         self._initialized = True
 
-        self._path: Path = Path.home() / ".cordix/config/variables.toml"
+        self._path: Path = GLOBAL_CONFIG_DIR / "globals.toml"
         self._config = TOMLConfiguration(self._path, create_if_not_exists=True)
 
         self.generate(regenerate=False)
