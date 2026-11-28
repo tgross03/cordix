@@ -43,6 +43,13 @@ def test_registry_non_type_restricted() -> None:
     assert not registry._key_types_registered
     assert registry.is_empty()
 
+    with pytest.raises(ValueError):
+        _ = Registry[ExampleClass](
+            index_attributes=["unique_id", "unique_name"],
+            force_key_types=False,
+            key_types=[int],
+        )
+
     objects = _generate_example_objects()
     excluded_object = ExampleClass(unique_id=4, unique_name="Qux", some_value=4.0)
 
@@ -53,6 +60,7 @@ def test_registry_non_type_restricted() -> None:
     assert set(registry._key_types.values()) == {str, int}
     assert not registry.force_key_types
     assert not registry.read_only
+    assert registry.index_attributes == ["unique_id", "unique_name"]
 
     assert len(registry) == 3
 
@@ -90,6 +98,11 @@ def test_registry_non_type_restricted() -> None:
 
     with pytest.raises(ValueError):
         registry.register(objects[0])
+
+    duplicate_key_obj = ExampleClass(unique_id=1, unique_name="Quux", some_value=10.0)
+
+    with pytest.raises(ValueError):
+        registry.register(duplicate_key_obj)
 
     with pytest.raises(KeyError):
         registry.keys_for_entry(entry=excluded_object)
@@ -190,6 +203,9 @@ def test_registry_non_type_restricted() -> None:
         registry.unregister_index(index=objects[0].unique_id, attribute="unique_id")
 
     with pytest.raises(ReadOnlyError):
+        registry.unregister_value(objects[0])
+
+    with pytest.raises(ReadOnlyError):
         registry.register(excluded_object)
 
     with pytest.raises(ReadOnlyError):
@@ -213,6 +229,9 @@ def test_registry_non_type_restricted() -> None:
 
     with pytest.raises(DuplicateKeyError):
         registry.unregister_index(index=duplicate_key_obj.unique_id)
+
+    with pytest.raises(DuplicateKeyError):
+        _ = registry["Foo"]
 
 
 def test_registry_type_restricted() -> None:
