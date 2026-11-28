@@ -16,7 +16,9 @@ class Service:
         self._name: str = name
         self._uuid: UUID = uuid
 
-        self._plugins: Registry[Plugin] = Registry(index_attributes=["name"])
+        self._plugins: Registry[Plugin] = Registry(
+            index_attributes=["name"], force_key_types=True, key_types=[str]
+        )
         self._modules: dict[str, Module] = {}
 
         # Directories
@@ -71,7 +73,7 @@ class Service:
         return self._modules
 
     @property
-    def plugins(self) -> dict[UUID, Plugin]:
+    def plugins(self) -> Registry[Plugin]:
         return self._plugins
 
     @property
