@@ -195,7 +195,7 @@ class Registry:
 
     ################# BUILT-INS ##################
 
-    def __class_getitem__(cls, item: type) -> type[Registry]:
+    def __class_getitem__(cls, item: type) -> type["Registry"]:
         cls.registry_type = item
 
         return cls
