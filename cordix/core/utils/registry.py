@@ -233,7 +233,7 @@ class Registry:
         else:
             self.unregister_index(index=index)
 
-    def __eq__(self, value: Registry[Any], /) -> bool:
+    def __eq__(self, value: "Registry[Any]", /) -> bool:
         for key, registry in value._registries.items():
 
             if key not in self._registries:
@@ -251,7 +251,7 @@ class Registry:
             and self._index_attributes == value._index_attributes
         )
 
-    def __ne__(self, value: Registry[Any], /) -> bool:
+    def __ne__(self, value: "Registry[Any]", /) -> bool:
         return not self.__eq__(value)
 
     def __contains__(self, item: Any):
@@ -552,7 +552,7 @@ class Registry:
             root.add(Tree(f"{keys}: {value}"))
         return root
 
-    def copy(self, read_only: bool = False) -> Registry[Any]:
+    def copy(self, read_only: bool = False) -> "Registry[Any]":
         """
         Returns a copy of the registry.
 

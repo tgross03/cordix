@@ -1,4 +1,4 @@
-__all__ = ["InvalidConfigurationError", "DuplicateKeyError"]
+__all__ = ["InvalidConfigurationError", "DuplicateKeyError", "ReadOnlyError"]
 
 
 class InvalidConfigurationError(Exception):
