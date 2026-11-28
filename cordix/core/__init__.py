@@ -1,3 +1,3 @@
-from .config import TOMLConfiguration, VariableLibrary
+from .config import TOMLConfiguration, GlobalVariables
 
-__all__ = ["TOMLConfiguration", "VariableLibrary"]
+__all__ = ["TOMLConfiguration", "GlobalVariables"]

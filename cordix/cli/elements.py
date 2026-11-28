@@ -58,7 +58,7 @@ class ConfirmInput:
 
             if in_value.lower() != "y" and in_value.lower() != "n" and in_value != "":
                 print(
-                    f"{palette.maroon}You have type y, n or nothing to proceed!{RESET}"
+                    f"{palette.maroon}You have to type y, n or nothing to proceed!{RESET}"
                 )
                 continue
 

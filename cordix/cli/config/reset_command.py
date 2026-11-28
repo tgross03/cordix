@@ -5,7 +5,7 @@ import rich_click as click
 
 from cordix.cli.colors import RESET, get_default_palette
 from cordix.cli.elements import ConfirmInput
-from cordix.core import VariableLibrary
+from cordix.core import GlobalVariables
 
 palette = get_default_palette()
 
@@ -31,16 +31,16 @@ def reset(force: bool) -> None:
         ).prompt()
 
         if confirm:
-            VariableLibrary().generate(regenerate=True)
+            GlobalVariables().generate(regenerate=True)
         else:
             print(f"{palette.red}Canceled reset.{RESET}")
             return None
     else:
-        VariableLibrary().generate(regenerate=True)
+        GlobalVariables().generate(regenerate=True)
 
     print(
         f"{palette.base}Regenerated variable configuration at "
-        f"{palette.sky}{VariableLibrary.get_path()}{palette.base}.{RESET}"
+        f"{palette.sky}{GlobalVariables.get_path()}{palette.base}.{RESET}"
     )
 
     return None

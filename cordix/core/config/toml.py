@@ -147,7 +147,10 @@ class TOMLConfiguration:
 
         return True
 
-    def get_keys(self, non_dict_only: bool = False) -> list[str]:
+    def __iter__(self):
+        return self.asdict().items().__iter__()
+
+    def keys(self, non_dict_only: bool = False) -> list[str]:
         """
         Provides a list of all keys in the configuration file.
 

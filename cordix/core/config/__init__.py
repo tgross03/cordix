@@ -1,4 +1,9 @@
 from .toml import TOMLConfiguration, MissingKeyPolicy
-from .variables import VariableLibrary
+from .globals import GlobalVariables, GLOBAL_CONFIG_DIR
 
-__all__ = ["TOMLConfiguration", "MissingKeyPolicy", "VariableLibrary"]
+__all__ = [
+    "TOMLConfiguration",
+    "MissingKeyPolicy",
+    "GlobalVariables",
+    "GLOBAL_CONFIG_DIR",
+]

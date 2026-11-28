@@ -5,7 +5,7 @@ from enum import Enum
 
 from catppuccin.palette import PALETTE as _PALETTE
 
-from cordix.core.config import VariableLibrary
+from cordix.core.config import GlobalVariables
 
 __all__ = ["get_default_palette", "rgb_to_ansi"]
 
@@ -102,4 +102,4 @@ for effect in EFFECTS:
 
 
 def get_default_palette():
-    return PALETTE[VariableLibrary.get_variable("cli.color_palette")]
+    return PALETTE[GlobalVariables.get_variable("cli.color_palette")]
